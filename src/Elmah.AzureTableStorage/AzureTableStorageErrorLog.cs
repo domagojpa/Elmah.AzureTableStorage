@@ -146,8 +146,10 @@ namespace Elmah.AzureTableStorage
             if (id == null) throw new ArgumentNullException("id");
             if (id.Length == 0) throw new ArgumentException(null, "id");
 
+            var partitionKey = AzureHelper.EncodeAzureKey(ApplicationName);
+
             var elmahEntity = _cloudTable.CreateQuery<ElmahEntity>()
-                .Where(e => e.RowKey == id)
+                .Where(e => e.PartitionKey == partitionKey && e.RowKey == id)
                 .ToList()
                 .First();
 
